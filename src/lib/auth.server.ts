@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
-import type { User } from "../../generated/prisma/client.js";
+import type { User } from "../generated/prisma/client.js";
 import type { AuthUser } from "../types/authTypes.js";
 import bcrypt from "bcryptjs";
 import { type Request } from "express";
