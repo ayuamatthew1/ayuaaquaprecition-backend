@@ -2,6 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import type { User } from "../../generated/prisma/client.js";
 import type { AuthUser } from "../types/authTypes.js";
 import bcrypt from "bcryptjs";
+import { type Request } from "express";
 
 const SALT_ROUNDS = 12;
 
@@ -47,8 +48,10 @@ export async function signAccessToken(user: User) {
     .sign(getJwtSecret());
 }
 
-export async function getAuthenticatedUserId(request: Request) {
-  const authorization = request.headers.get("authorization");
+
+export async function getAuthenticatedUserId(req: Request): Promise<string | null> {
+  const authorization = req.headers.authorization;
+
   const token = authorization?.startsWith("Bearer ")
     ? authorization.slice("Bearer ".length)
     : null;

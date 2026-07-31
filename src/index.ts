@@ -1,17 +1,20 @@
 import express, { type Express, type Request, type Response } from 'express';
 import cors from "cors";
-import { prisma } from "./src/lib/prisma.js";
-import { loginSchema, registerSchema } from "./src/validations/auth.validations.js";
+import { prisma } from "./lib/prisma.js";
+import { loginSchema, registerSchema } from "./validations/auth.validations.js";
 import {
   verifyPassword,
   signAccessToken,
   toAuthUser,
   hashPassword,
-} from "./src/lib/auth.server.js"
+  getAuthenticatedUserId,
+} from "./lib/auth.server.js"
+import { type DashboardPond } from './types/DashBoardPond.js';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
+// MIDDLEWARES
 app.use(cors());
 app.use(express.json());
 
@@ -123,8 +126,72 @@ app.post("/api/register", async (req: Request, res: Response) => {
       },
     );
   }
-})
+});
 
+// AUTH VERIFICATION API
+app.get("/api/me", async (req: Request, res: Response) => {
+  try {
+    const userId = await getAuthenticatedUserId(req);
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "Unauthorized." });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user || user.status !== "ACTIVE") {
+      return res.status(401).json({ success: false, message: "Unauthorized." });
+    }
+
+    return res.status(200).json({ success: true, data: toAuthUser(user) });
+  } catch (error) {
+    console.error("Error retrieving user: ", error)
+  }
+});
+
+// DASHBOARD API
+app.get("/api/dashboard", async (req: Request, res: Response) => {
+  try {
+    const userId = await getAuthenticatedUserId(req);
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized." });
+    }
+
+    const ponds: DashboardPond[] = await prisma.pond.findMany({
+      where: { farm: { ownerId: userId } },
+      select: {
+        id: true,
+        name: true,
+        device: {
+          select: {
+            id: true,
+            sensorReadings: {
+              orderBy: { recordedAt: "desc" },
+              take: 1,
+              select: {
+                id: true,
+                temperature: true,
+                ph: true,
+                dissolvedOxygen: true,
+                turbidity: true,
+                ammonia: true,
+                recordedAt: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return res.status(200).json({ success: true, data: ponds });
+
+  } catch (error) {
+    console.error("Dashboard data error:", error);
+    return res.status(500).json(
+      { success: false, message: "Unable to load dashboard data." },
+    );
+  }
+});
 
 app.listen(PORT, () =>
   console.log(`🚀 Backend running smoothly on port ${PORT}`),
