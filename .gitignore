@@ -6,3 +6,6 @@ generated/prisma
 .windsurf/
 .agents/
 .claude/
+
+# Ignore build output
+dist

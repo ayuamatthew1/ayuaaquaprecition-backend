@@ -18,6 +18,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).json({ message: "Welcome to the backend API." });
+});
+
 // LOGIN ROUTE
 app.post("/api/login", async (req: Request, res: Response) => {
   try {
@@ -158,7 +162,7 @@ app.get("/api/dashboard", async (req: Request, res: Response) => {
       return res.status(401).json({ success: false, message: "Unauthorized." });
     }
 
-    const ponds: DashboardPond[] = await prisma.pond.findMany({
+    const ponds = await prisma.pond.findMany({
       where: { farm: { ownerId: userId } },
       select: {
         id: true,
