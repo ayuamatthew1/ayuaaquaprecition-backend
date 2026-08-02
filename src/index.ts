@@ -1,15 +1,18 @@
-import express, { type Express, type Request, type Response } from 'express';
 import cors from "cors";
-import { prisma } from "./lib/prisma.js";
-import { loginSchema, registerSchema } from "./validations/auth.validations.js";
+import express, { type Express, type NextFunction, type Request, type Response } from 'express';
+import { requireAuth } from "./authMiddlewares/auth.middleware.js";
 import {
-  verifyPassword,
+  hashPassword,
   signAccessToken,
   toAuthUser,
-  hashPassword,
-  getAuthenticatedUserId,
-} from "./lib/auth.server.js"
-import { type DashboardPond } from './types/DashBoardPond.js';
+  verifyPassword
+} from "./lib/auth.server.js";
+import { prisma } from "./lib/prisma.js";
+import deviceRouter from "./routes/devices.routes.js";
+import farmRouter from "./routes/farm.routes.js";
+import feedingScheduleRouter from "./routes/feedingSchedule.routes.js";
+import pondRouter from "./routes/pond.routes.js";
+import { loginSchema, registerSchema } from "./validations/auth.validations.js";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -17,10 +20,13 @@ const PORT = process.env.PORT || 3000;
 // MIDDLEWARES
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/health", (req: Request, res: Response) => {
-  res.status(200).json({ message: "Welcome to the backend API." });
-});
+// ROUTERS ROUTES
+app.use("/api/farms", farmRouter);
+app.use("/api/feeding-schedules", feedingScheduleRouter);
+app.use("/api/ponds", pondRouter);
+app.use("/api/devices", deviceRouter);
 
 // LOGIN ROUTE
 app.post("/api/login", async (req: Request, res: Response) => {
@@ -133,13 +139,9 @@ app.post("/api/register", async (req: Request, res: Response) => {
 });
 
 // AUTH VERIFICATION API
-app.get("/api/me", async (req: Request, res: Response) => {
+app.get("/api/me", requireAuth, async (req: Request, res: Response) => {
   try {
-    const userId = await getAuthenticatedUserId(req);
-
-    if (!userId) {
-      return res.status(400).json({ success: false, message: "Unauthorized." });
-    }
+    const userId = req.userId!;
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -154,13 +156,9 @@ app.get("/api/me", async (req: Request, res: Response) => {
 });
 
 // DASHBOARD API
-app.get("/api/dashboard", async (req: Request, res: Response) => {
+app.get("/api/dashboard", requireAuth, async (req: Request, res: Response) => {
   try {
-    const userId = await getAuthenticatedUserId(req);
-
-    if (!userId) {
-      return res.status(401).json({ success: false, message: "Unauthorized." });
-    }
+    const userId = req.userId!;
 
     const ponds = await prisma.pond.findMany({
       where: { farm: { ownerId: userId } },
@@ -195,6 +193,10 @@ app.get("/api/dashboard", async (req: Request, res: Response) => {
       { success: false, message: "Unable to load dashboard data." },
     );
   }
+});
+
+app.use((_req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({ success: false, message: "Route not found Or yet to be implemented." });
 });
 
 app.listen(PORT, () =>
