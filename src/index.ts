@@ -8,11 +8,17 @@ import {
   verifyPassword
 } from "./lib/auth.server.js";
 import { prisma } from "./lib/prisma.js";
+import adminDeviceRouter from "./routes/admin/admin.devices.routes.js";
+import adminFarmRouter from "./routes/admin/admin.farms.routes.js";
+import adminSubscriptionRouter from "./routes/admin/admin.subscriptions.routes.js";
+import adminUserRouter from "./routes/admin/admin.users.routes.js";
+import adminRouter from "./routes/admin/adminAlert+dashboard.routes.js";
 import deviceRouter from "./routes/devices.routes.js";
 import farmRouter from "./routes/farm.routes.js";
 import feedingScheduleRouter from "./routes/feedingSchedule.routes.js";
 import pondRouter from "./routes/pond.routes.js";
 import { loginSchema, registerSchema } from "./validations/auth.validations.js";
+
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +33,12 @@ app.use("/api/farms", farmRouter);
 app.use("/api/feeding-schedules", feedingScheduleRouter);
 app.use("/api/ponds", pondRouter);
 app.use("/api/devices", deviceRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/admin/devices", adminDeviceRouter);
+app.use("/api/admin/farms", adminFarmRouter);
+app.use("/api/admin/users", adminUserRouter);
+app.use("/api/admin/subscriptions", adminSubscriptionRouter);
+
 
 // LOGIN ROUTE
 app.post("/api/login", async (req: Request, res: Response) => {
