@@ -1,7 +1,10 @@
 import { type Request, type Response, Router } from "express";
 import { z } from "zod";
 import { requireAuth } from "../authMiddlewares/auth.middleware.js";
+<<<<<<< HEAD
 import { getAuthenticatedUserId } from "../lib/auth.server.js";
+=======
+>>>>>>> edfc58c (added other more routes)
 import { prisma } from "../lib/prisma.js";
 import { createFarmSchema } from "../validations/farms.validations.js";
 

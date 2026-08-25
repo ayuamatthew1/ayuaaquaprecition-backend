@@ -215,7 +215,11 @@ model FeedHistory {
   @@index([fedAt])
   @@index([completedById])
 }
+<<<<<<< HEAD
 
+=======
+// ...
+>>>>>>> edfc58c (added other more routes)
 model Alert {
   id              String         @id @default(cuid())
   pondId          String
@@ -268,7 +272,11 @@ model DiseasePrediction {
 
   @@index([pondId])
   @@index([generatedAt])
+<<<<<<< HEAD
 }
+=======
+} 
+>>>>>>> edfc58c (added other more routes)
 
 model Notification {
   id        String              @id @default(cuid())

@@ -1,0 +1,12 @@
+0000000000000000000000000000000000000000 59f3cb8d761d24cee4abe9de1c851fdab6b18677 agera emmanuel <ageraemmanuel611@gmail.com> 1785520950 +0100	commit (initial): initial commit project setup and create login and register route
+59f3cb8d761d24cee4abe9de1c851fdab6b18677 0000000000000000000000000000000000000000 agera emmanuel <ageraemmanuel611@gmail.com> 1785521036 +0100	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 59f3cb8d761d24cee4abe9de1c851fdab6b18677 agera emmanuel <ageraemmanuel611@gmail.com> 1785521036 +0100	Branch: renamed refs/heads/master to refs/heads/main
+59f3cb8d761d24cee4abe9de1c851fdab6b18677 3363dc9bbe47c67fd11e978c0274054ab895c01d agera emmanuel <ageraemmanuel611@gmail.com> 1785526321 +0100	commit: add dashboard api and auth validation api
+3363dc9bbe47c67fd11e978c0274054ab895c01d d494e5eb13c212ddb752ba94293ce736fd87aa73 agera emmanuel <ageraemmanuel611@gmail.com> 1785526497 +0100	commit: add start script
+d494e5eb13c212ddb752ba94293ce736fd87aa73 d66ca5976623e21f4806898a81b824d99ab7bcab agera emmanuel <ageraemmanuel611@gmail.com> 1785529584 +0100	commit: add buil scripts and out dir
+d66ca5976623e21f4806898a81b824d99ab7bcab 70f27627a8c99915490bd1859fc7b150ae3a7bfe agera emmanuel <ageraemmanuel611@gmail.com> 1785530683 +0100	commit: remove rimaf from build srcipt
+70f27627a8c99915490bd1859fc7b150ae3a7bfe 70da43c20cdfac95875432e60f0d1bcb727234e3 agera emmanuel <ageraemmanuel611@gmail.com> 1785531311 +0100	commit: add postinstall script
+70da43c20cdfac95875432e60f0d1bcb727234e3 48cd87d37d6e0e4c2f6b74e843c40cfd0110dc2a agera emmanuel <ageraemmanuel611@gmail.com> 1785531628 +0100	commit: move prisma, generated to root dir
+48cd87d37d6e0e4c2f6b74e843c40cfd0110dc2a fa32b142a11f3560bea0ce9212676e1faca98302 agera emmanuel <ageraemmanuel611@gmail.com> 1785613861 +0100	commit: final config for render test deploy
+fa32b142a11f3560bea0ce9212676e1faca98302 86f8268b4c1b71424389ef3194f08802e3af10d5 agera emmanuel <ageraemmanuel611@gmail.com> 1785691977 +0100	commit: add farm routes, device route, feeding routes, and ponds routes with their respective validations
+86f8268b4c1b71424389ef3194f08802e3af10d5 afbe85382adfc75c266d7923c41049acc90785af agera emmanuel <ageraemmanuel611@gmail.com> 1785888710 +0100	commit: created admin routes
