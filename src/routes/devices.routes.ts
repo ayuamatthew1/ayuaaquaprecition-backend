@@ -31,88 +31,6 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", requireAuth, async (req: Request, res: Response) => {
-  try {
-    const userId = req.userId as string;
-
-    const data = purchaseDeviceSchema.parse(req.body);
-
-    const purchase = await prisma.$transaction(async (tx) => {
-      const device = await tx.device.findUnique({
-        where: { id: data.deviceId },
-        select: {
-          id: true,
-          isListed: true,
-          ownerId: true,
-          listedPrice: true,
-        },
-      });
-
-      if (!device) {
-        throw new Error("Device not found.");
-      }
-
-      if (!device.isListed || device.ownerId) {
-        throw new Error("Device is not available for purchase.");
-      }
-
-      const purchase = await tx.purchase.create({
-        data: {
-          buyerId: userId,
-          deviceId: data.deviceId,
-          price: device.listedPrice ?? 0,
-          status: "COMPLETED",
-        },
-        select: {
-          id: true,
-          deviceId: true,
-          price: true,
-          status: true,
-          createdAt: true,
-        },
-      });
-
-      await tx.device.update({
-        where: { id: data.deviceId },
-        data: {
-          ownerId: userId,
-          isListed: false,
-          listedPrice: null,
-        },
-      });
-
-      return purchase;
-    });
-
-    return res.status(201).json({ success: true, data: purchase });
-  } catch (error) {
-    console.error("Device purchase POST error:", error);
-    const isValidationError = error instanceof z.ZodError;
-    const message = isValidationError
-      ? "Invalid purchase request."
-      : error instanceof Error
-        ? error.message
-        : "Server error";
-
-    const status = isValidationError ? 400 : error instanceof Error && error.message === "Device not found." ? 404 : 409;
-
-    return res.status(status).json({ success: false, message });
-  }
-});
-
-export default router;
-
-import { Router, type Request, type Response } from "express";
-import z from "zod";
-import { requireAuth } from "../authMiddlewares/auth.middleware.js";
-import { prisma } from "../lib/prisma.js";
-
-const purchaseDeviceSchema = z.object({
-  deviceId: z.string().cuid(),
-});
-
-const router = Router();
-
 router.get("/", requireAuth, async (req: Request, res: Response) => {
   try {
     const userId = req.userId as string;
@@ -164,7 +82,7 @@ router.post("/purchase", requireAuth, async (req: Request, res: Response) => {
     const data = purchaseDeviceSchema.parse(req.body);
 
     const device = await prisma.device.findUnique({
-      where: { id: data.deviceId },
+      where: { id: data.deviceId, },
       select: {
         id: true,
         isListed: true,

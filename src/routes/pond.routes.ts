@@ -40,116 +40,28 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
 router.get("/:id", requireAuth, async (req: Request, res: Response) => {
   try {
     const userId = req.userId!;
-<<<<<<< HEAD
     const pondId = req.params.id;
-=======
-    const pondId = req.params.id as string;
->>>>>>> edfc58c (added other more routes)
 
     if (!pondId) {
       return res.status(400).json({ success: false, message: "Pond ID is required." });
     }
 
     const pond = await prisma.pond.findFirst({
-<<<<<<< HEAD
       where: { id: pondId as string, farm: { ownerId: userId } },
-=======
-      where: { id: pondId, farm: { ownerId: userId } },
->>>>>>> edfc58c (added other more routes)
       select: {
         id: true,
         name: true,
         type: true,
         capacity: true,
         waterVolume: true,
-<<<<<<< HEAD
         code: true,
       },
     });
 
-=======
-        device: {
-          select: {
-            id: true,
-            name: true,
-            serialNumber: true,
-            status: true,
-            batteryLevel: true,
-            signalStrength: true,
-            firmwareVersion: true,
-            installedAt: true,
-            lastSeenAt: true,
-            sensorReadings: {
-              orderBy: { recordedAt: "desc" },
-              select: {
-                temperature: true,
-                ph: true,
-                dissolvedOxygen: true,
-                turbidity: true,
-                ammonia: true,
-                recordedAt: true,
-              }
-            },
-          },
-        },
-        fishBatches: {
-          orderBy: { stockedAt: "desc" },
-          take: 1,
-          select: { species: true, quantity: true, stockedAt: true },
-        },
-        feedingSchedules: {
-          where: { isActive: true },
-          orderBy: { feedTime: "asc" },
-          take: 5,
-          select: {
-            id: true,
-            feedType: true,
-            quantity: true,
-            unit: true,
-            feedTime: true,
-            repeatDays: true,
-            isActive: true,
-          },
-        },
-        alerts: {
-          orderBy: { createdAt: "desc" },
-          take: 6,
-          select: {
-            id: true,
-            title: true,
-            message: true,
-            severity: true,
-            status: true,
-            createdAt: true,
-            resolvedAt: true,
-          },
-        },
-        waterQualityPredictions: {
-          orderBy: { generatedAt: "desc" },
-          take: 1,
-          select: {
-            overallScore: true,
-            riskLevel: true,
-            summary: true,
-            recommendations: true,
-            confidence: true,
-          },
-        },
-      },
-    });
-
-
->>>>>>> edfc58c (added other more routes)
     if (!pond) {
       return res.status(404).json({ success: false, message: "Pond not found." });
     }
 
-<<<<<<< HEAD
-=======
-    console.log("Pond data backend: ", pond);
-
-
->>>>>>> edfc58c (added other more routes)
     return res.status(200).json({ success: true, data: pond });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Internal server error." });

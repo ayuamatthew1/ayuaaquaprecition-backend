@@ -17,16 +17,9 @@ import deviceRouter from "./routes/devices.routes.js";
 import farmRouter from "./routes/farm.routes.js";
 import feedingScheduleRouter from "./routes/feedingSchedule.routes.js";
 import pondRouter from "./routes/pond.routes.js";
-<<<<<<< HEAD
 import { loginSchema, registerSchema } from "./validations/auth.validations.js";
 
 
-=======
-import sensorRouter from "./routes/sensors.routes.js";
-import alertRouter from "./routes/alert.routes.js"
-import { loginSchema, registerSchema } from "./validations/auth.validations.js";
-
->>>>>>> edfc58c (added other more routes)
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
@@ -40,13 +33,6 @@ app.use("/api/farms", farmRouter);
 app.use("/api/feeding-schedules", feedingScheduleRouter);
 app.use("/api/ponds", pondRouter);
 app.use("/api/devices", deviceRouter);
-<<<<<<< HEAD
-=======
-app.use("/api/sensor-readings", sensorRouter);
-app.use("/api/alerts", alertRouter);
-
-// ADMIN ROUTES
->>>>>>> edfc58c (added other more routes)
 app.use("/api/admin", adminRouter);
 app.use("/api/admin/devices", adminDeviceRouter);
 app.use("/api/admin/farms", adminFarmRouter);
@@ -54,11 +40,7 @@ app.use("/api/admin/users", adminUserRouter);
 app.use("/api/admin/subscriptions", adminSubscriptionRouter);
 
 
-<<<<<<< HEAD
 // LOGIN ROUTE
-=======
-// LOGIN ROUTE...
->>>>>>> edfc58c (added other more routes)
 app.post("/api/login", async (req: Request, res: Response) => {
   try {
     const data = loginSchema.parse(req.body);
