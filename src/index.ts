@@ -18,7 +18,8 @@ import farmRouter from "./routes/farm.routes.js";
 import feedingScheduleRouter from "./routes/feedingSchedule.routes.js";
 import pondRouter from "./routes/pond.routes.js";
 import { loginSchema, registerSchema } from "./validations/auth.validations.js";
-
+import sensorsRouter from "./routes/sensors.routes.js"
+import alertRouter from "./routes/alert.routes.js"
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -33,6 +34,8 @@ app.use("/api/farms", farmRouter);
 app.use("/api/feeding-schedules", feedingScheduleRouter);
 app.use("/api/ponds", pondRouter);
 app.use("/api/devices", deviceRouter);
+app.use("/api/alarts", alertRouter);
+app.use("/api/sensor-readings", sensorsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/admin/devices", adminDeviceRouter);
 app.use("/api/admin/farms", adminFarmRouter);
